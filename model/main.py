@@ -8,6 +8,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report
 import pickle as pickle
 import sklearn
+import os
 
 
 print(sklearn.__version__)
@@ -42,7 +43,11 @@ def create_model(data):
     
 
 def get_clean_data():
-    data = pd.read_csv("data/data.csv")
+    # Get the project root directory (parent of model directory)
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    data_path = os.path.join(project_root, 'data', 'data.csv')
+    
+    data = pd.read_csv(data_path)
     
     data = data.drop(['Unnamed: 32','id'], axis=1)
 
@@ -58,10 +63,13 @@ def main():
 
   model, scaler = create_model(data)
 
-  with open('model/model.pkl', 'wb') as f:
+  # Get the model directory path
+  model_dir = os.path.dirname(os.path.abspath(__file__))
+  
+  with open(os.path.join(model_dir, 'model.pkl'), 'wb') as f:
     pickle.dump(model, f)
 
-  with open('model/scaler.pkl', 'wb') as f:
+  with open(os.path.join(model_dir, 'scaler.pkl'), 'wb') as f:
     pickle.dump(scaler, f)
   
 
